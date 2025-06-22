@@ -7,11 +7,9 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
 export default function LeftSidebar() {
-  const router = useRouter();
   const pathName = usePathname();
   const {userId}= useAuth()
 
-  console.log(userId);
   return (
     <section className="custom-scrollbar leftsidebar">
       <div className="flex w-full flex-1 flex-col gap-6 px-6">
@@ -20,7 +18,6 @@ export default function LeftSidebar() {
           const isActive =
             (pathName.includes(i.route) && i.route.length > 1) ||
             pathName == i.route;
-            console.log(isActive);
 
           return (
             <Link
@@ -33,11 +30,11 @@ export default function LeftSidebar() {
                 alt={i.label}
                 width={24}
                 height={24}
-                className={` ${isActive ? "invert" : ""}`}
+                className={` ${isActive ? "invert " : ""}`}
               />
               <p
                 className={` max-lg:hidden ${
-                  isActive ? "text-black" : "text-light-1"
+                  isActive ? "text-black text-body-semibold" : "text-light-1 "
                 }`}
               >
                 {i.label}

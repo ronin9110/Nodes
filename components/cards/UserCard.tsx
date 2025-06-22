@@ -11,7 +11,7 @@ interface Params {
 
 export const UserCard = ({ id, name, username, image, personType }: Params) => {
   return (
-    <Link href={`/profile/${id}`} className={`flex w-full flex-col rounded bg-dark-4 p-4`}>
+    <Link href={`/profile/${id}`} className={`flex w-full flex-col rounded-lg bg-dark-4 p-4`}>
       <div className="flex items-start">
         <div className="flex w-full flex-1 flex-row items-center">
           <div className="flex flex-col ">

@@ -35,6 +35,7 @@ type Event = {
 };
 
 export const POST = async (request: Request) => {
+  console.log("Community")
   const payload = await request.json();
   const header =await headers();
 

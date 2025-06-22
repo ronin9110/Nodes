@@ -24,6 +24,7 @@ import { isBase64Image } from "@/lib/utils";
 import { useUploadThing } from "@/lib/uploadthing";
 import { updateUser } from "@/lib/actions/user.actions";
 import { usePathname, useRouter } from "next/navigation";
+import { Label } from "@radix-ui/react-label";
 
 interface props {
   user: {
@@ -53,18 +54,25 @@ const AccountProfile = ({ user, btnTitle }: props) => {
       bio: user?.bio || "",
     },
   });
-  console.log(user);
+  // console.log(user);
 
   const onSubmit = async (values: z.infer<typeof UserValidation>) => {
     const blob = values.profile_photo;
 
+    // console.log(blob);
+
     const hasChanged = isBase64Image(blob);
 
     if (hasChanged) {
-      const imgRes = await startUpload(Files);
-      if (imgRes && imgRes[0].ufsUrl) {
-        values.profile_photo = imgRes[0].ufsUrl;
-      }
+      await startUpload(Files)
+        .then((imgRes) => {
+
+          // console.log(imgRes)
+          if (imgRes && imgRes[0].ufsUrl) {
+            values.profile_photo = imgRes[0].ufsUrl;
+          }
+        })
+        .catch((err) => console.log(err));
     }
 
     await updateUser({
@@ -88,6 +96,7 @@ const AccountProfile = ({ user, btnTitle }: props) => {
 
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
+      // console.log(file);
       setFiles(Array.from(e.target.files));
 
       if (!file.type.includes("image")) return;
@@ -135,15 +144,26 @@ const AccountProfile = ({ user, btnTitle }: props) => {
                 )}
               </FormLabel>
               <FormControl className="flex-1 text-base-semibold text-gray-100">
-                <Input
+                {/* <Input
                   type="file"
                   placeholder="Upload a photo"
                   accept="image/*"
                   className="account-form_image-input"
                   onChange={(e) => handleImage(e, field.onChange)}
-                />
+                /> */}
+                <div className="grid w-full max-w-sm items-center gap-3">
+                  <Label htmlFor="picture">Upload a photo</Label>
+                  <Input
+                    id="picture"
+                    accept="image/*"
+                    placeholder="Upload a photo"
+                    type="file"
+                    onChange={(e) => handleImage(e, field.onChange)}
+                    className="account-form_image-input"
+                  />
+                </div>
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -163,7 +183,7 @@ const AccountProfile = ({ user, btnTitle }: props) => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -183,7 +203,7 @@ const AccountProfile = ({ user, btnTitle }: props) => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
@@ -203,11 +223,16 @@ const AccountProfile = ({ user, btnTitle }: props) => {
                   {...field}
                 />
               </FormControl>
-              <FormMessage/>
+              <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit">Submit</Button>
+        <Button
+          type="submit"
+          className="bg-white text-black hover:text-white hover:border-2"
+        >
+          Submit
+        </Button>
       </form>
     </Form>
   );

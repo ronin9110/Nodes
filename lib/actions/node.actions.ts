@@ -4,8 +4,7 @@ import { revalidatePath } from "next/cache";
 import NodePost from "../models/node.model";
 import User from "../models/user.model";
 import { connectToDB } from "../mongoose";
-import { model } from "mongoose";
-import { threadId } from "worker_threads";
+import Community from "../models/community.model";
 
 interface Params {
   text: string;
@@ -21,12 +20,25 @@ export const CreateNode = async ({
   path,
 }: Params) => {
   connectToDB();
+  let communityIdObject = null;
+  if (communityId) {
+    communityIdObject = await Community.findOne({ id: communityId });
+  }
+
+  console.log("community");
 
   const createNode = await NodePost.create({
     text,
     author,
-    community: null,
+    community: communityIdObject,
   });
+
+  if (communityIdObject) {
+    // Update Community model
+    await Community.findByIdAndUpdate(communityIdObject, {
+      $push: { nodes: createNode._id },
+    });
+  }
 
   await User.findByIdAndUpdate(author, { $push: { nodes: createNode._id } });
 
@@ -45,7 +57,13 @@ export const FetchPosts = async (pageNumber = 1, pageSize = 20) => {
     .skip(skipAmount)
     .populate({ path: "author", model: User })
     .populate({
-      path: "childern",
+      path: "community",
+      model: Community,
+      strictPopulate: false,
+      select: "_id name image",
+    })
+    .populate({
+      path: "children",
       populate: {
         path: "author",
         model: User,
@@ -58,7 +76,7 @@ export const FetchPosts = async (pageNumber = 1, pageSize = 20) => {
     parentId: { $in: [null, undefined] },
   });
 
-  const posts = await postsQuery.exec();
+  const posts = JSON.parse(JSON.stringify(await postsQuery.exec()));
 
   const isNext = totalPosts > skipAmount + posts.length;
 
@@ -74,6 +92,12 @@ export const fecthNodeById = async (id: string) => {
         path: "author",
         model: User,
         select: "_id id name image",
+      })
+      .populate({
+        path: "community",
+        model: Community,
+        strictPopulate: false,
+        select: "_id name image",
       })
       .populate({
         path: "children",
@@ -97,9 +121,9 @@ export const fecthNodeById = async (id: string) => {
       })
       .exec();
 
-    return post;
+    return JSON.parse(JSON.stringify(post));
   } catch (error: any) {
-    throw new Error(`Error Fetching Thread :${error.message}`);
+    throw new Error(`Error Fetching Node :${error.message}`);
   }
 };
 
@@ -115,7 +139,7 @@ export const addCommentToNode = async (
     const originalNode = await NodePost.findById(Nodeid);
 
     if (!originalNode) {
-      throw new Error(`Thread not Found`);
+      throw new Error(`Node not Found`);
     }
 
     const commentNode = new NodePost({
@@ -133,5 +157,26 @@ export const addCommentToNode = async (
     revalidatePath(path);
   } catch (error: any) {
     throw new Error(`Error Adding Comment :${error.message}`);
+  }
+};
+
+export const LikeNode = async (Nodeid: string, id: string, like: boolean) => {
+  connectToDB();
+  try {
+    if (like) {
+      const post = await NodePost.findByIdAndUpdate(
+        Nodeid,
+        { $push: { likes: id } },
+        { new: true }
+      );
+    } else {
+      const post = await NodePost.findByIdAndUpdate(
+        Nodeid,
+        { $pull: { likes: id } },
+        { new: true }
+      );
+    }
+  } catch (error: any) {
+    throw new Error(`Error Liking Node :${error.message}`);
   }
 };

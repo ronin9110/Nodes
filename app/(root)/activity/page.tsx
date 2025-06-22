@@ -26,11 +26,11 @@ export default async function Page() {
       <h2 className="head-text mb-10">
         Activity Page
         <section className="mt-10 flex flex-col gap-5">
-          {activity.length > 0 ? (
+          {activity ? (
             <>
-              {activity.map((act) => (
+              {activity.replies.length>0&&activity.replies.map((act:any) => (
                 <Link key={act._id} href={`/node/${act.parentId}`}>
-                  <article className="activity-card">
+                  <article className="activity-card rounded-lg">
                     <div>
                       <Image
                     src={act.author.image}
@@ -45,6 +45,27 @@ export default async function Page() {
                         {act.author.name}
                       </span>{" "}
                       replied to your Node.
+                    </p>
+                  </article>
+                </Link>
+              ))}
+              {activity.likes.length>0&&activity.likes.map((act:any,index:number) => (
+                <Link key={index} href={`/node/${act.parentId}`}>
+                  <article className="activity-card">
+                    <div>
+                      <Image
+                    src={act.author.image}
+                    alt="Profile photo"
+                    width={30}
+                    height={30}
+                    className="rounded-full object-cover"
+                    />
+                    </div>
+                    <p className="text-ellipsis !text-small-regular">
+                      <span className="text-small-semibold">
+                        {act.author.name}
+                      </span>{" "}
+                      Liked your node.
                     </p>
                   </article>
                 </Link>

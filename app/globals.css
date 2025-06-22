@@ -88,6 +88,7 @@
   --color-light-4: #5c5c7b;
   --color-gray-1: #697c89;
   --color-glassmorphism: rgba(16, 16, 18, 0.6);
+  
 
   --shadow-count-badge: 0px 0px 6px 2px rgba(219, 188, 159, 0.3);
   --shadow-groups-sidebar: -30px 0px 60px 0px rgba(28, 28, 31, 0.5);
@@ -96,6 +97,12 @@
 
   --animate-accordion-down: accordion-down 0.2s ease-out;
   --animate-accordion-up: accordion-up 0.2s ease-out;
+
+  --color-custom-1:#353535;
+  --color-custom-2:#666666;
+  --color-custom-3:#9b9b9b;
+  --color-custom-4:#d4d4d4;
+  --color-custom-5:#ffffff;
 
   @keyframes accordion-down {
     from {
@@ -200,11 +207,11 @@
 }
 
 @utility topbar {
-  @apply fixed top-0 z-30 flex w-full items-center justify-between bg-dark-2 px-6 py-3;
+  @apply fixed top-0 z-30 flex w-full items-center justify-between ml-2 bg-black px-6 py-3;
 }
 
 @utility bottombar {
-  @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-glassmorphism p-4 backdrop-blur-lg xs:px-7 md:hidden;
+  @apply fixed bottom-0 z-10 w-full rounded-t-3xl bg-custom-1 p-4 backdrop-blur-lg xs:px-7 md:hidden;
 }
 
 @utility bottombar_container {
@@ -216,7 +223,7 @@
 }
 
 @utility leftsidebar {
-  @apply sticky left-0 top-0 z-20 flex h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-dark-2 pb-5 pt-28 max-md:hidden;
+  @apply sticky left-0 top-0 z-20 flex max-h-screen w-fit flex-col justify-between overflow-auto border-r border-r-dark-4 bg-black pb-5 pt-26 max-md:hidden;
 }
 
 @utility leftsidebar_link {
@@ -228,7 +235,7 @@
 }
 
 @utility rightsidebar {
-  @apply sticky right-0 top-0 z-20 flex h-screen w-fit flex-col justify-between gap-12 overflow-auto border-l border-l-dark-4 bg-dark-2 px-10 pb-6 pt-28 max-xl:hidden;
+  @apply sticky right-0 top-0 z-20 flex h-screen w-fit flex-col justify-between gap-12 overflow-auto border-l border-l-dark-4 bg-black px-10 pb-6 pt-28 max-xl:hidden;
 }
 
 @utility css-invert {
@@ -255,12 +262,6 @@
     background: #7878a3;
   }
 }
-
-
-
-
-
-
 
 
 /*

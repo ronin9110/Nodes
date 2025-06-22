@@ -27,10 +27,12 @@ import { usePathname, useRouter } from "next/navigation";
 import { NodeValidation } from "@/lib/validations/node";
 import { CreateNode } from "@/lib/actions/node.actions";
 import { currentUser } from "@clerk/nextjs/server";
+import { useOrganization } from "@clerk/nextjs";
 
 export default function PostNode({ userId }: { userId: string }) {
   const pathName = usePathname();
   const router = useRouter();
+  const { organization }= useOrganization();
 
   const form = useForm({
     resolver: zodResolver(NodeValidation),
@@ -41,12 +43,14 @@ export default function PostNode({ userId }: { userId: string }) {
   });
 
   const onSubmit = async (values: z.infer<typeof NodeValidation>) => {
-    await CreateNode({
+    
+      await CreateNode({
       text: values.node.trim(),
       author: userId,
-      communityId: null,
+      communityId: organization? organization.id:null,
       path: pathName,
     });
+    
 
     router.push("/");
   };
@@ -76,7 +80,7 @@ export default function PostNode({ userId }: { userId: string }) {
             </FormItem>
           )}
         />
-        <Button type="submit" className=" text-dark-3 bg-light-1">
+        <Button type="submit" className="bg-white text-black hover:text-white hover:border-2">
           Post Node
         </Button>
       </form>

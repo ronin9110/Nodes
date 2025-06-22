@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { format } from "date-fns";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -27,16 +28,16 @@ export function formatDateString(dateString: string) {
     minute: "2-digit",
   });
 
-  return `${time} - ${formattedDate}`;
+  return format(new Date(dateString), "hh:mm a - MMM dd, yyyy")
 }
 
 // created by chatgpt
 export function formatThreadCount(count: number): string {
   if (count === 0) {
-    return "No Threads";
+    return "No Nodes";
   } else {
     const threadCount = count.toString().padStart(2, "0");
-    const threadWord = count === 1 ? "Thread" : "Threads";
+    const threadWord = count === 1 ? "Node" : "Nodes";
     return `${threadCount} ${threadWord}`;
   }
 }

@@ -50,10 +50,10 @@ export async function createCommunity(
 }
 
 export async function fetchCommunityDetails(id: string) {
+  // console.log("Id:", id);
   try {
     connectToDB();
-
-    const communityDetails = await Community.findOne({ id }).populate([
+    const communityDetails = await Community.findOne({ _id: id }).populate([
       "createdBy",
       {
         path: "members",
@@ -61,8 +61,8 @@ export async function fetchCommunityDetails(id: string) {
         select: "name username image _id id",
       },
     ]);
-
-    return communityDetails;
+    // console.log("nothing:", await Community.findOne({ _id: id }));
+    return JSON.parse(JSON.stringify(communityDetails));
   } catch (error) {
     // Handle any errors
     console.error("Error fetching community details:", error);
@@ -74,28 +74,40 @@ export async function fetchCommunityPosts(id: string) {
   try {
     connectToDB();
 
-    const communityPosts = await Community.findById(id).populate({
-      path: "nodes",
-      model: NodePost,
-      populate: [
-        {
-          path: "author",
-          model: User,
-          select: "name image id", // Select the "name" and "_id" fields from the "User" model
-        },
-        {
-          path: "children",
-          model: NodePost,
-          populate: {
+    const communityPosts = await Community.findById(id)
+      .populate({
+        path: "nodes",
+        model: NodePost,
+        populate: [
+          {
             path: "author",
             model: User,
-            select: "image _id", // Select the "name" and "_id" fields from the "User" model
+            select: "name image id", // Select the "name" and "_id" fields from the "User" model
           },
-        },
-      ],
-    });
+          {
+            path: "children",
+            model: NodePost,
+            populate: [
+              {
+                path: "author",
+                model: User,
+                select: "image _id", // Select the "name" and "_id" fields from the "User" model
+              },
+            ],
+          },
+          {
+        path: "community",
+        model: Community,
+        strictPopulate: false,
+        select: "_id name image",
+      }
+        ],
+        strictPopulate: false,
+      })
 
-    return communityPosts;
+      // console.log(communityPosts)
+
+    return JSON.parse(JSON.stringify(communityPosts));
   } catch (error) {
     // Handle any errors
     console.error("Error fetching community posts:", error);

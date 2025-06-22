@@ -49,6 +49,9 @@ export default function Comment({
   });
 
   const onSubmit = async (values: z.infer<typeof CommentValidation>) => {
+
+
+    // console.log(NodeId)
     await addCommentToNode(NodeId, values.node, currentUserId.toString(), path);
     form.reset();
   };
@@ -83,7 +86,7 @@ export default function Comment({
         />
         <Button
           type="submit"
-          className=" text-dark-3 bg-light-1 hover:text-light-1"
+          className="bg-white text-black hover:text-white hover:border-2"
         >
           Comment
         </Button>
