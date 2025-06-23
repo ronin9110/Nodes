@@ -1,13 +1,4 @@
-<div style="display:flex;">
-<div>
-<img style="filter:invert(1);margin-right:30px" src ="./public/assets/logo.svg" height=70 /> 
-</div>
-<div>
-
 # Nodes – Collaborative Content Platform
-</div>
-
-</div>
 
 Nodes is a modern web application built with **Next.js**, **TypeScript**, **Tailwind CSS**, and **Clerk** for authentication. It allows users to create, collaborate, and share content seamlessly through a sleek UI and real-time features. The project is designed with modularity and scalability in mind, backed by MongoDB and enhanced with UploadThing, **shadcn/ui**.
 
