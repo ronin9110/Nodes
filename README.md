@@ -1,6 +1,6 @@
 <div style="display:flex;">
 <div>
-<img style="filter:invert(1);margin-right:30px" src ="public\assets\logo.svg" height=70 /> 
+<img style="filter:invert(1);margin-right:30px" src ="./public/assets/logo.svg" height=70 /> 
 </div>
 <div>
 
